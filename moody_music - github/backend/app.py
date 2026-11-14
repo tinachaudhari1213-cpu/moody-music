@@ -1,4 +1,3 @@
-
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,9 +5,16 @@ import mysql.connector
 import os
 import requests
 import re
-from youtube_config import YOUTUBE_API_KEY
+from dotenv import load_dotenv
+
+# Load private environment variables
+load_dotenv()
+
+# YouTube API key
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 CORS(app)
 
 
@@ -42,10 +48,10 @@ def is_valid_password(password):
 
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="your_database_username",
-        password="your_database_password",
-        database="replace_with_your_secret_key"
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
     )
 
 
